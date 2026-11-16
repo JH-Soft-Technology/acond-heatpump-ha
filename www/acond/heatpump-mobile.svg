@@ -70,5 +70,5 @@
     <text x="55" y="790">BIVALENCE</text><text x="150" y="790">LÉTO</text><text x="245" y="790">CHLAZENÍ</text>
     <text x="55" y="870">PORUCHA</text><text x="150" y="870">REŽIM</text><text x="245" y="870">REGULACE</text>
   </g>
-<g font-size="16" font-weight="600" fill="#8a95a1"><circle cx="30" cy="30" r="7.2" fill="#ff6b5e"/><text x="46" y="35.6">AKTUÁLNÍ</text><circle cx="30" cy="62" r="7.2" fill="#5fd068"/><text x="46" y="67.6">ŽÁDANÁ</text></g>
+<g font-size="16" font-weight="600" fill="#8a95a1"><circle cx="478" cy="24" r="7.2" fill="#ff6b5e"/><text x="492" y="30">AKTUÁLNÍ</text><circle cx="478" cy="52" r="7.2" fill="#5fd068"/><text x="492" y="58">ŽÁDANÁ</text></g>
 </svg>

@@ -255,7 +255,7 @@ sections:
     - condition: screen
       media_query: '(min-width: 768px)'
   - type: picture-elements
-    image: /local/acond/heatpump-mobile.svg?v=4
+    image: /local/acond/heatpump-mobile.svg?v=5
     grid_options:
       columns: full
     visibility:
@@ -266,7 +266,7 @@ sections:
       entity: sensor.acond_venkovni_teplota
       style:
         left: 26.67%
-        top: 13.89%
+        top: 8.9%
         background-color: rgba(15,20,26,0.78)
         color: '#fff'
         border-radius: 3vw
