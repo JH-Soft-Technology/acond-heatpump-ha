@@ -131,3 +131,7 @@ Addresses in Home Assistant are **0-based** (`30001` → input `0`, `40001` → 
 ## 📄 License
 
 [MIT](LICENSE)
+
+---
+
+[![buy me a coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/jhoralek)

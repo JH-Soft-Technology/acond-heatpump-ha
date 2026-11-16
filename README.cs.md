@@ -131,3 +131,7 @@ Bity `TC_status`: `0` zapnuto · `1` kompresor · `2` porucha · `3` TUV · `4` 
 ## 📄 Licence
 
 [MIT](LICENSE)
+
+---
+
+[![buy me a coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/jhoralek)
