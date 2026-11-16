@@ -1,0 +1,536 @@
+# Lovelace view: Acond heat pump
+# Paste into: Dashboard → ⋮ → Edit dashboard → ⋮ → Raw configuration editor → under `views:`
+# (or add a new view and paste into its YAML editor)
+# Images are expected in /config/www/acond/ (served as /local/acond/...)
+type: sections
+max_columns: 4
+title: Tepelné čerpadlo
+path: tepelne-cerpadlo
+icon: mdi:heat-pump-outline
+sections:
+- type: grid
+  column_span: 4
+  cards:
+  - type: heading
+    heading: ♨️ Tepelné čerpadlo Acond
+    heading_style: title
+    badges:
+    - type: entity
+      entity: sensor.acond_heartbeat
+      name: Modbus
+      show_name: true
+      icon: mdi:heart-pulse
+  - type: picture-elements
+    image: /local/acond/heatpump.svg?v=7
+    grid_options:
+      columns: full
+    elements:
+    - type: state-label
+      entity: sensor.acond_venkovni_teplota
+      style:
+        left: 15.8%
+        top: 19.5%
+        background-color: rgba(15,20,26,0.78)
+        color: '#fff'
+        border-radius: 12px
+        padding: 2px 12px
+        font-size: clamp(13px, 2vw, 26px)
+        font-weight: '600'
+        white-space: nowrap
+      prefix: 'Venku '
+    - type: state-label
+      entity: sensor.acond_vystupni_voda
+      style:
+        left: 39.2%
+        top: 33.6%
+        background-color: rgba(15,20,26,0.78)
+        color: '#fff'
+        border-radius: 12px
+        padding: 2px 12px
+        font-size: clamp(13px, 2vw, 26px)
+        font-weight: '600'
+        white-space: nowrap
+    - type: state-label
+      entity: sensor.acond_zpatecka_aktualni
+      style:
+        left: 39.2%
+        top: 65.6%
+        background-color: rgba(15,20,26,0.78)
+        color: '#fff'
+        border-radius: 12px
+        padding: 2px 12px
+        font-size: clamp(13px, 2vw, 26px)
+        font-weight: '600'
+        white-space: nowrap
+    - type: state-label
+      entity: sensor.acond_okruh_1_aktualni
+      style:
+        left: 81.25%
+        top: 18.75%
+        background-color: rgba(15,20,26,0.78)
+        color: '#ff6b5e'
+        border-radius: 12px
+        padding: 2px 10px
+        font-size: clamp(12px, 1.7vw, 24px)
+        font-weight: '600'
+        white-space: nowrap
+        min-width: 9vw
+        text-align: center
+        box-sizing: border-box
+      tap_action:
+        action: more-info
+        entity: climate.acond_okruh_1
+    - type: state-label
+      entity: sensor.acond_okruh_1_zadana
+      style:
+        left: 81.25%
+        top: 29.69%
+        background-color: rgba(15,20,26,0.78)
+        color: '#5fd068'
+        border-radius: 12px
+        padding: 2px 10px
+        font-size: clamp(12px, 1.7vw, 24px)
+        font-weight: '600'
+        white-space: nowrap
+        min-width: 9vw
+        text-align: center
+        box-sizing: border-box
+      tap_action:
+        action: more-info
+        entity: climate.acond_okruh_1
+    - type: state-icon
+      entity: binary_sensor.acond_obeh_okruh_1
+      state_color: true
+      style:
+        left: 69.2%
+        top: 23.4%
+        --mdc-icon-size: clamp(18px, 2.4vw, 32px)
+    - type: state-label
+      entity: sensor.acond_tuv_aktualni
+      style:
+        left: 81.25%
+        top: 61.7%
+        background-color: rgba(15,20,26,0.78)
+        color: '#ff6b5e'
+        border-radius: 12px
+        padding: 2px 10px
+        font-size: clamp(12px, 1.7vw, 24px)
+        font-weight: '600'
+        white-space: nowrap
+        min-width: 9vw
+        text-align: center
+        box-sizing: border-box
+      tap_action:
+        action: more-info
+        entity: climate.acond_tuv
+    - type: state-label
+      entity: sensor.acond_tuv_zadana
+      style:
+        left: 81.25%
+        top: 73.4%
+        background-color: rgba(15,20,26,0.78)
+        color: '#5fd068'
+        border-radius: 12px
+        padding: 2px 10px
+        font-size: clamp(12px, 1.7vw, 24px)
+        font-weight: '600'
+        white-space: nowrap
+        min-width: 9vw
+        text-align: center
+        box-sizing: border-box
+      tap_action:
+        action: more-info
+        entity: climate.acond_tuv
+    - type: state-icon
+      entity: binary_sensor.acond_ohrev_tuv
+      state_color: true
+      style:
+        left: 81.25%
+        top: 80.5%
+        --mdc-icon-size: clamp(18px, 2.4vw, 32px)
+    - type: conditional
+      conditions:
+      - entity: binary_sensor.acond_kompresor_bezi
+        state: 'on'
+      elements:
+      - type: image
+        image: /local/acond/fan-spin.svg?v=1
+        tap_action:
+          action: more-info
+          entity: binary_sensor.acond_kompresor_bezi
+        style:
+          left: 14.17%
+          top: 48.44%
+          width: 16.67%
+    - type: conditional
+      conditions:
+      - entity: binary_sensor.acond_porucha
+        state: 'on'
+      elements:
+      - type: state-label
+        entity: binary_sensor.acond_porucha
+        style:
+          left: 36.7%
+          top: 21.0%
+          background-color: rgba(200,30,30,0.92)
+          color: '#fff'
+          border-radius: 12px
+          padding: 2px 12px
+          font-size: clamp(13px, 2vw, 26px)
+          font-weight: '600'
+          white-space: nowrap
+        prefix: '⚠ PORUCHA TČ '
+    - type: state-icon
+      entity: binary_sensor.acond_tc_zapnuto
+      state_color: true
+      style:
+        left: 5.83%
+        top: 83.0%
+        --mdc-icon-size: clamp(18px, 2.4vw, 32px)
+    - type: state-icon
+      entity: binary_sensor.acond_kompresor_bezi
+      state_color: true
+      style:
+        left: 12.50%
+        top: 83.0%
+        --mdc-icon-size: clamp(18px, 2.4vw, 32px)
+    - type: state-icon
+      entity: binary_sensor.acond_odtavani
+      state_color: true
+      style:
+        left: 19.17%
+        top: 83.0%
+        --mdc-icon-size: clamp(18px, 2.4vw, 32px)
+    - type: state-icon
+      entity: binary_sensor.acond_bivalence
+      state_color: true
+      style:
+        left: 25.83%
+        top: 83.0%
+        --mdc-icon-size: clamp(18px, 2.4vw, 32px)
+    - type: state-icon
+      entity: binary_sensor.acond_letni_provoz
+      state_color: true
+      style:
+        left: 32.50%
+        top: 83.0%
+        --mdc-icon-size: clamp(18px, 2.4vw, 32px)
+    - type: state-icon
+      entity: binary_sensor.acond_chlazeni
+      state_color: true
+      style:
+        left: 39.17%
+        top: 83.0%
+        --mdc-icon-size: clamp(18px, 2.4vw, 32px)
+    - type: state-icon
+      entity: binary_sensor.acond_porucha
+      state_color: true
+      style:
+        left: 45.83%
+        top: 83.0%
+        --mdc-icon-size: clamp(18px, 2.4vw, 32px)
+    - type: state-icon
+      entity: select.acond_rezim_tc
+      icon: mdi:tune-variant
+      state_color: true
+      tap_action:
+        action: more-info
+        entity: select.acond_rezim_tc
+      style:
+        left: 52.5%
+        top: 83.0%
+        --mdc-icon-size: clamp(18px, 2.4vw, 32px)
+    - type: state-icon
+      entity: select.acond_typ_regulace
+      icon: mdi:thermostat-auto
+      state_color: true
+      tap_action:
+        action: more-info
+        entity: select.acond_typ_regulace
+      style:
+        left: 59.17%
+        top: 83.0%
+        --mdc-icon-size: clamp(18px, 2.4vw, 32px)
+    visibility:
+    - condition: screen
+      media_query: '(min-width: 768px)'
+  - type: picture-elements
+    image: /local/acond/heatpump-mobile.svg?v=4
+    grid_options:
+      columns: full
+    visibility:
+    - condition: screen
+      media_query: '(max-width: 767px)'
+    elements:
+    - type: state-label
+      entity: sensor.acond_venkovni_teplota
+      style:
+        left: 26.67%
+        top: 13.89%
+        background-color: rgba(15,20,26,0.78)
+        color: '#fff'
+        border-radius: 3vw
+        padding: 0.3vw 2vw
+        font-size: 4.1vw
+        font-weight: '600'
+        white-space: nowrap
+      prefix: 'Venku '
+    - type: state-label
+      entity: sensor.acond_okruh_1_aktualni
+      style:
+        left: 75%
+        top: 21.67%
+        background-color: rgba(15,20,26,0.78)
+        color: '#ff6b5e'
+        border-radius: 3vw
+        padding: 0.4vw 1.5vw
+        font-size: 3.6vw
+        font-weight: '600'
+        white-space: nowrap
+        min-width: 24vw
+        text-align: center
+        box-sizing: border-box
+      tap_action:
+        action: more-info
+        entity: climate.acond_okruh_1
+    - type: state-label
+      entity: sensor.acond_okruh_1_zadana
+      style:
+        left: 75%
+        top: 30.56%
+        background-color: rgba(15,20,26,0.78)
+        color: '#5fd068'
+        border-radius: 3vw
+        padding: 0.4vw 1.5vw
+        font-size: 3.6vw
+        font-weight: '600'
+        white-space: nowrap
+        min-width: 24vw
+        text-align: center
+        box-sizing: border-box
+      tap_action:
+        action: more-info
+        entity: climate.acond_okruh_1
+    - type: state-icon
+      entity: binary_sensor.acond_obeh_okruh_1
+      state_color: true
+      style:
+        left: 75%
+        top: 41.78%
+        --mdc-icon-size: 5.6vw
+    - type: state-label
+      entity: sensor.acond_vystupni_voda
+      style:
+        left: 26.67%
+        top: 54.44%
+        background-color: rgba(15,20,26,0.78)
+        color: '#fff'
+        border-radius: 3vw
+        padding: 0.3vw 2vw
+        font-size: 4.1vw
+        font-weight: '600'
+        white-space: nowrap
+    - type: state-label
+      entity: sensor.acond_zpatecka_aktualni
+      style:
+        left: 26.67%
+        top: 65%
+        background-color: rgba(15,20,26,0.78)
+        color: '#fff'
+        border-radius: 3vw
+        padding: 0.3vw 2vw
+        font-size: 4.1vw
+        font-weight: '600'
+        white-space: nowrap
+    - type: state-label
+      entity: sensor.acond_tuv_aktualni
+      style:
+        left: 79.17%
+        top: 64.44%
+        background-color: rgba(15,20,26,0.78)
+        color: '#ff6b5e'
+        border-radius: 3vw
+        padding: 0.4vw 1.5vw
+        font-size: 3.6vw
+        font-weight: '600'
+        white-space: nowrap
+        min-width: 24vw
+        text-align: center
+        box-sizing: border-box
+      tap_action:
+        action: more-info
+        entity: climate.acond_tuv
+    - type: state-label
+      entity: sensor.acond_tuv_zadana
+      style:
+        left: 79.17%
+        top: 73.33%
+        background-color: rgba(15,20,26,0.78)
+        color: '#5fd068'
+        border-radius: 3vw
+        padding: 0.4vw 1.5vw
+        font-size: 3.6vw
+        font-weight: '600'
+        white-space: nowrap
+        min-width: 24vw
+        text-align: center
+        box-sizing: border-box
+      tap_action:
+        action: more-info
+        entity: climate.acond_tuv
+    - type: state-icon
+      entity: binary_sensor.acond_ohrev_tuv
+      state_color: true
+      style:
+        left: 80%
+        top: 84.44%
+        --mdc-icon-size: 5.6vw
+    - type: conditional
+      conditions:
+      - entity: binary_sensor.acond_kompresor_bezi
+        state: 'on'
+      elements:
+      - type: image
+        image: /local/acond/fan-spin.svg?v=1
+        tap_action:
+          action: more-info
+          entity: binary_sensor.acond_kompresor_bezi
+        style:
+          left: 21.67%
+          top: 30%
+          width: 27.54%
+    - type: conditional
+      conditions:
+      - entity: binary_sensor.acond_porucha
+        state: 'on'
+      elements:
+      - type: state-label
+        entity: binary_sensor.acond_porucha
+        style:
+          left: 75%
+          top: 49.8%
+          background-color: rgba(200,30,30,0.92)
+          color: '#fff'
+          border-radius: 3vw
+          padding: 0.3vw 2vw
+          font-size: 4.1vw
+          font-weight: '600'
+          white-space: nowrap
+        prefix: '⚠ PORUCHA '
+    - type: state-icon
+      entity: binary_sensor.acond_tc_zapnuto
+      state_color: true
+      style:
+        left: 9.17%
+        top: 74.67%
+        --mdc-icon-size: 5.6vw
+    - type: state-icon
+      entity: binary_sensor.acond_kompresor_bezi
+      state_color: true
+      style:
+        left: 25%
+        top: 74.67%
+        --mdc-icon-size: 5.6vw
+    - type: state-icon
+      entity: binary_sensor.acond_odtavani
+      state_color: true
+      style:
+        left: 40.83%
+        top: 74.67%
+        --mdc-icon-size: 5.6vw
+    - type: state-icon
+      entity: binary_sensor.acond_bivalence
+      state_color: true
+      style:
+        left: 9.17%
+        top: 83.56%
+        --mdc-icon-size: 5.6vw
+    - type: state-icon
+      entity: binary_sensor.acond_letni_provoz
+      state_color: true
+      style:
+        left: 25%
+        top: 83.56%
+        --mdc-icon-size: 5.6vw
+    - type: state-icon
+      entity: binary_sensor.acond_chlazeni
+      state_color: true
+      style:
+        left: 40.83%
+        top: 83.56%
+        --mdc-icon-size: 5.6vw
+    - type: state-icon
+      entity: binary_sensor.acond_porucha
+      state_color: true
+      style:
+        left: 9.17%
+        top: 92.44%
+        --mdc-icon-size: 5.6vw
+    - type: state-icon
+      entity: select.acond_rezim_tc
+      icon: mdi:tune-variant
+      state_color: true
+      tap_action:
+        action: more-info
+        entity: select.acond_rezim_tc
+      style:
+        left: 25%
+        top: 92.44%
+        --mdc-icon-size: 5.6vw
+    - type: state-icon
+      entity: select.acond_typ_regulace
+      icon: mdi:thermostat-auto
+      state_color: true
+      tap_action:
+        action: more-info
+        entity: select.acond_typ_regulace
+      style:
+        left: 40.83%
+        top: 92.44%
+        --mdc-icon-size: 5.6vw
+- type: grid
+  column_span: 2
+  cards:
+  - type: heading
+    heading: 📈 Teploty za 24 hodin
+    heading_style: title
+  - type: history-graph
+    hours_to_show: 24
+    grid_options:
+      columns: full
+      rows: 6
+    entities:
+    - entity: sensor.acond_venkovni_teplota
+      name: Venku
+    - entity: sensor.acond_okruh_1_aktualni
+      name: Okruh 1
+    - entity: sensor.acond_tuv_aktualni
+      name: TUV
+    - entity: sensor.acond_zpatecka_aktualni
+      name: Zpátečka
+    - entity: sensor.acond_vystupni_voda
+      name: Výstupní voda
+- type: grid
+  column_span: 2
+  cards:
+  - type: heading
+    heading: ⏱️ Provoz za 24 hodin
+    heading_style: title
+  - type: history-graph
+    hours_to_show: 24
+    grid_options:
+      columns: full
+      rows: 6
+    entities:
+    - entity: binary_sensor.acond_kompresor_bezi
+      name: Kompresor
+    - entity: binary_sensor.acond_ohrev_tuv
+      name: Ohřev TUV
+    - entity: binary_sensor.acond_obeh_okruh_1
+      name: Oběh okruh 1
+    - entity: binary_sensor.acond_odtavani
+      name: Odtávání
+    - entity: binary_sensor.acond_bivalence
+      name: Bivalence
+    - entity: binary_sensor.acond_porucha
+      name: Porucha

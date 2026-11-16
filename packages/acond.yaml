@@ -1,0 +1,298 @@
+# =====================================================================
+#  Acond Therm – tepelné čerpadlo přes ModbusTCP
+#  Umístění: /config/packages/acond.yaml
+#  V configuration.yaml musí být:
+#    homeassistant:
+#      packages: !include_dir_named packages
+#
+#  TČ: 192.168.1.100:502, Modbus ID 1, Big Endian, teploty int16 x10
+#  Adresy v HA jsou 0-based:  30001 -> input address 0,  40001 -> holding address 0
+#  Firmware v TČ zobrazuje registry jen do 30018 / 40012 (bez 300xx poruch, otáček...)
+#  POZOR: TČ dovoluje jen JEDNOHO Modbus mastera.
+# =====================================================================
+
+modbus:
+  - name: acond
+    type: tcp
+    host: 192.168.1.100
+    port: 502
+    timeout: 5
+    delay: 1
+    message_wait_milliseconds: 50
+
+    # ---------- Input registry (TČ zapisuje, HA čte) ----------
+    sensors:
+      - name: "Acond okruh 1 žádaná"
+        unique_id: acond_t_set_indoor1
+        input_type: input
+        address: 0            # 30001
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 10
+      - name: "Acond okruh 1 aktuální"
+        unique_id: acond_t_act_indoor1
+        input_type: input
+        address: 1            # 30002
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 10
+      - name: "Acond okruh 2 žádaná"
+        unique_id: acond_t_set_indoor2
+        input_type: input
+        address: 2            # 30003
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        scan_interval: 60
+      - name: "Acond okruh 2 aktuální"
+        unique_id: acond_t_act_indoor2
+        input_type: input
+        address: 3            # 30004
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 60
+      - name: "Acond TUV žádaná"
+        unique_id: acond_t_set_tuv
+        input_type: input
+        address: 4            # 30005
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        scan_interval: 30
+      - name: "Acond TUV aktuální"
+        unique_id: acond_t_act_tuv
+        input_type: input
+        address: 5            # 30006
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 30
+      - name: "Acond TC status"
+        unique_id: acond_tc_status
+        input_type: input
+        address: 6            # 30007 bitové pole
+        data_type: uint16
+        scan_interval: 10
+      - name: "Acond zpátečka žádaná"
+        unique_id: acond_t_set_water_back
+        input_type: input
+        address: 7            # 30008
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        scan_interval: 30
+      - name: "Acond zpátečka aktuální"
+        unique_id: acond_t_act_water_back
+        input_type: input
+        address: 8            # 30009
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 30
+      - name: "Acond venkovní teplota"
+        unique_id: acond_t_act_air
+        input_type: input
+        address: 9            # 30010
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 60
+      - name: "Acond režim"
+        unique_id: acond_rezim_pan
+        input_type: input
+        address: 13           # 30014: 0 auto,1 TČ,3 bivalence,4 vyp,5 manuál,6 chlazení
+        data_type: int16
+        scan_interval: 30
+      - name: "Acond typ regulace"
+        unique_id: acond_typ_reg_pan
+        input_type: input
+        address: 14           # 30015: 0 AcondTherm,1 Ekviterm,2 Manuál
+        data_type: int16
+        scan_interval: 30
+      - name: "Acond solanka"
+        unique_id: acond_t_solanka
+        input_type: input
+        address: 15           # 30016 (jen země/voda)
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        scan_interval: 60
+      - name: "Acond heartbeat"
+        unique_id: acond_heartbeat
+        input_type: input
+        address: 16           # 30017 čítač komunikace 0-255
+        data_type: uint16
+        scan_interval: 10
+      - name: "Acond výstupní voda"
+        unique_id: acond_t_act_water_outlet
+        input_type: input
+        address: 17           # 30018
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: "°C"
+        device_class: temperature
+        state_class: measurement
+        scan_interval: 30
+
+      # ---------- Holding (zpětné čtení toho, co zapisuje HA) ----------
+      - name: "Acond TC_set raw"
+        unique_id: acond_tc_set_raw
+        input_type: holding
+        address: 5            # 40006 bitové pole
+        data_type: uint16
+        scan_interval: 30
+
+    # ---------- Termostaty: aktuální = input reg, cíl = holding reg ----------
+    climates:
+      - name: "Acond okruh 1"
+        unique_id: acond_climate_okruh1
+        input_type: input
+        address: 1                  # 30002 aktuální
+        target_temp_register: 0     # 40001 žádaná
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        temperature_unit: C
+        min_temp: 10
+        max_temp: 30
+        temp_step: 0.5
+        scan_interval: 30
+      - name: "Acond TUV"
+        unique_id: acond_climate_tuv
+        input_type: input
+        address: 5                  # 30006 aktuální
+        target_temp_register: 4     # 40005 žádaná
+        data_type: int16
+        scale: 0.1
+        precision: 1
+        temperature_unit: C
+        min_temp: 10
+        max_temp: 46
+        temp_step: 1
+        scan_interval: 30
+
+template:
+  # ---------- Bity TC_status (30007) ----------
+  - binary_sensor:
+      - name: "Acond TČ zapnuto"
+        unique_id: acond_bit_on
+        state: "{{ states('sensor.acond_tc_status')|int(0)|bitwise_and(1) > 0 }}"
+        availability: "{{ has_value('sensor.acond_tc_status') }}"
+      - name: "Acond kompresor běží"
+        unique_id: acond_bit_running
+        device_class: running
+        state: "{{ states('sensor.acond_tc_status')|int(0)|bitwise_and(2) > 0 }}"
+        availability: "{{ has_value('sensor.acond_tc_status') }}"
+      - name: "Acond porucha"
+        unique_id: acond_bit_fault
+        device_class: problem
+        state: "{{ states('sensor.acond_tc_status')|int(0)|bitwise_and(4) > 0 }}"
+        availability: "{{ has_value('sensor.acond_tc_status') }}"
+      - name: "Acond ohřev TUV"
+        unique_id: acond_bit_tuv
+        device_class: heat
+        state: "{{ states('sensor.acond_tc_status')|int(0)|bitwise_and(8) > 0 }}"
+        availability: "{{ has_value('sensor.acond_tc_status') }}"
+      - name: "Acond oběh okruh 1"
+        unique_id: acond_bit_circ1
+        device_class: running
+        state: "{{ states('sensor.acond_tc_status')|int(0)|bitwise_and(16) > 0 }}"
+        availability: "{{ has_value('sensor.acond_tc_status') }}"
+      - name: "Acond odtávání"
+        unique_id: acond_bit_defrost
+        state: "{{ states('sensor.acond_tc_status')|int(0)|bitwise_and(256) > 0 }}"
+        availability: "{{ has_value('sensor.acond_tc_status') }}"
+      - name: "Acond bivalence"
+        unique_id: acond_bit_aux
+        device_class: heat
+        state: "{{ states('sensor.acond_tc_status')|int(0)|bitwise_and(512) > 0 }}"
+        availability: "{{ has_value('sensor.acond_tc_status') }}"
+      - name: "Acond letní provoz"
+        unique_id: acond_bit_summer
+        state: "{{ states('sensor.acond_tc_status')|int(0)|bitwise_and(1024) > 0 }}"
+        availability: "{{ has_value('sensor.acond_tc_status') }}"
+      - name: "Acond chlazení"
+        unique_id: acond_bit_cooling
+        device_class: cold
+        state: "{{ states('sensor.acond_tc_status')|int(0)|bitwise_and(4096) > 0 }}"
+        availability: "{{ has_value('sensor.acond_tc_status') }}"
+
+  # ---------- Ovládání ----------
+  - select:
+      # 40006 TC_set – režim; zachovává bity 6-8 (solar, bazén, léto/zima)
+      - name: "Acond režim TČ"
+        unique_id: acond_select_mode
+        options: "{{ ['Automat', 'Jen TČ', 'Jen bivalence', 'Vypnuto', 'Chlazení'] }}"
+        state: >
+          {{ {0:'Automat', 1:'Jen TČ', 3:'Jen bivalence', 4:'Vypnuto', 6:'Chlazení'}
+             .get(states('sensor.acond_rezim')|int(-1), 'Automat') }}
+        availability: "{{ has_value('sensor.acond_rezim') }}"
+        select_option:
+          - action: modbus.write_register
+            data:
+              hub: acond
+              address: 5      # 40006
+              value: >
+                {% set bits = {'Automat':1, 'Jen TČ':2, 'Jen bivalence':4, 'Vypnuto':8, 'Chlazení':16} %}
+                {{ (states('sensor.acond_tc_set_raw')|int(0)|bitwise_and(448)) + bits[option] }}
+
+      # 40007 TC_set_reg – typ regulace
+      - name: "Acond typ regulace"
+        unique_id: acond_select_regulation
+        options: "{{ ['AcondTherm', 'Ekviterm', 'Manuál'] }}"
+        state: >
+          {{ ['AcondTherm', 'Ekviterm', 'Manuál'][states('sensor.acond_typ_regulace')|int(0)] }}
+        availability: "{{ states('sensor.acond_typ_regulace')|int(-1) in [0,1,2] }}"
+        select_option:
+          - action: modbus.write_register
+            data:
+              hub: acond
+              address: 6      # 40007
+              value: "{{ ['AcondTherm', 'Ekviterm', 'Manuál'].index(option) }}"
+
+  - number:
+      # 40008 – žádaná zpátečka v manuálním režimu
+      - name: "Acond zpátečka manuál"
+        unique_id: acond_number_water_back
+        unit_of_measurement: "°C"
+        min: 20
+        max: 55
+        step: 0.5
+        state: "{{ states('sensor.acond_zpatecka_zadana') }}"
+        availability: "{{ has_value('sensor.acond_zpatecka_zadana') }}"
+        set_value:
+          - action: modbus.write_register
+            data:
+              hub: acond
+              address: 7      # 40008
+              value: "{{ (value * 10) | round | int }}"

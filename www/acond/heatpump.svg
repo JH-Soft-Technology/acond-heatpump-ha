@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="unit" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f1f4f7"/><stop offset="1" stop-color="#cfd7de"/>
+    </linearGradient>
+    <linearGradient id="tank" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#cfd7de"/><stop offset=".5" stop-color="#f4f6f8"/><stop offset="1" stop-color="#c6ced6"/>
+    </linearGradient>
+    <linearGradient id="hot" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e5533d" stop-opacity=".35"/><stop offset="1" stop-color="#3d8be5" stop-opacity=".25"/>
+    </linearGradient>
+  </defs>
+
+
+  <!-- ===== potrubí (pod objekty) ===== -->
+  <g fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <!-- výstupní voda (červená) -->
+    <path d="M340 250 H800 V350 H852" stroke="#e5533d"/>
+    <path d="M600 250 V140 H770" stroke="#e5533d"/>
+    <!-- zpátečka (modrá) s přemostěním přes výstupní vodu -->
+    <path d="M770 180 H660 V232 M660 268 V380" stroke="#3d8be5"/>
+    <path d="M660 232 A18 18 0 0 1 660 268" stroke="#3d8be5"/>
+    <path d="M340 380 H760 V560 H852" stroke="#3d8be5"/>
+  </g>
+  <!-- šipky směru -->
+  <g fill="#e5533d"><path d="M405 238 l18 12 -18 12z"/><path d="M690 128 l18 12 -18 12z"/></g>
+  <g fill="#3d8be5"><path d="M423 368 l-18 12 18 12z"/></g>
+  <!-- trojcestný ventil -->
+  <g transform="translate(600 250)">
+    <path d="M-16 -12 L0 0 L-16 12Z M16 -12 L0 0 L16 12Z M-12 -16 L0 0 L12 -16Z" fill="#5d6873"/>
+    <circle r="5" fill="#f1f4f7" stroke="#5d6873" stroke-width="2"/>
+  </g>
+
+  <!-- ===== venkovní jednotka ===== -->
+  <rect x="58" y="440" width="24" height="26" rx="4" fill="#7c8792"/>
+  <rect x="298" y="440" width="24" height="26" rx="4" fill="#7c8792"/>
+  <rect x="40" y="180" width="300" height="262" rx="20" fill="url(#unit)" stroke="#8d99a5" stroke-width="3"/>
+  <circle cx="170" cy="310" r="98" fill="#9aa6b2"/>
+  <circle cx="170" cy="310" r="92" fill="#2f3a45"/>
+  <g stroke="#56636f" stroke-width="2" fill="none">
+    <circle cx="170" cy="310" r="72"/><circle cx="170" cy="310" r="50"/><circle cx="170" cy="310" r="28"/>
+    <path d="M78 310 H262 M170 218 V402"/>
+  </g>
+  <g fill="#aab6c2" transform="translate(170 310)">
+    <path d="M0 -8 C30 -60 70 -40 62 -14 C40 -20 18 -14 0 -8Z"/>
+    <path d="M0 -8 C30 -60 70 -40 62 -14 C40 -20 18 -14 0 -8Z" transform="rotate(120)"/>
+    <path d="M0 -8 C30 -60 70 -40 62 -14 C40 -20 18 -14 0 -8Z" transform="rotate(240)"/>
+    <circle r="12" fill="#c9d2da"/>
+  </g>
+  <g stroke="#9aa6b2" stroke-width="4" stroke-linecap="round">
+    <path d="M288 220 H322 M288 240 H322 M288 260 H322 M288 280 H322 M288 300 H322"/>
+  </g>
+  <text x="305" y="420" text-anchor="middle" font-size="15" font-weight="700" fill="#6b7682" letter-spacing="1">ACOND</text>
+
+  <!-- ===== dům ===== -->
+  <path d="M700 86 L890 8 L1080 86Z" fill="#c0563d"/>
+  <rect x="720" y="80" width="340" height="140" rx="6" fill="#f3ead9" stroke="#c9b99a" stroke-width="3"/>
+  <!-- radiátor -->
+  <g transform="translate(770 102)">
+    <rect x="0" y="0" width="120" height="96" rx="8" fill="url(#hot)" stroke="#b56b5e" stroke-width="2"/>
+    <g stroke="#b56b5e" stroke-width="3" stroke-linecap="round">
+      <path d="M20 12 V84 M40 12 V84 M60 12 V84 M80 12 V84 M100 12 V84"/>
+    </g>
+  </g>
+
+  <!-- ===== zásobník TUV ===== -->
+  <rect x="830" y="322" width="250" height="270" rx="40" fill="url(#tank)" stroke="#8d99a5" stroke-width="3"/>
+  <path d="M852 350 C872 360 872 380 852 390 C872 400 872 420 852 430 C872 440 872 460 852 470 C872 480 872 500 852 510 C872 520 872 540 852 560"
+        fill="none" stroke="#c46a52" stroke-width="6" stroke-linecap="round" opacity=".85"/>
+  <path d="M1080 360 h24 M1080 560 h24" stroke="#8d99a5" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- popisky -->
+  <g font-size="16" font-weight="600" fill="#8a95a1">
+    <text x="190" y="170" text-anchor="middle">VENKOVNÍ JEDNOTKA</text>
+    <text x="955" y="614" text-anchor="middle">ZÁSOBNÍK TUV</text>
+    <text x="470" y="282" text-anchor="middle" font-size="13" fill="#e5533d">VÝSTUPNÍ VODA</text>
+    <text x="470" y="356" text-anchor="middle" font-size="13" fill="#3d8be5">ZPÁTEČKA</text>
+    <g font-size="12" letter-spacing=".5"><text x="70" y="578" text-anchor="middle">TČ</text><text x="150" y="578" text-anchor="middle">KOMPRESOR</text><text x="230" y="578" text-anchor="middle">ODTÁVÁNÍ</text><text x="310" y="578" text-anchor="middle">BIVALENCE</text><text x="390" y="578" text-anchor="middle">LÉTO</text><text x="470" y="578" text-anchor="middle">CHLAZENÍ</text><text x="550" y="578" text-anchor="middle">PORUCHA</text><text x="630" y="578" text-anchor="middle">REŽIM</text><text x="710" y="578" text-anchor="middle">REGULACE</text></g>
+  </g>
+<g font-size="16" font-weight="600" fill="#8a95a1"><circle cx="50" cy="36" r="7.2" fill="#ff6b5e"/><text x="66" y="41.6">AKTUÁLNÍ</text><circle cx="50" cy="68" r="7.2" fill="#5fd068"/><text x="66" y="73.6">ŽÁDANÁ</text></g>
+</svg>
