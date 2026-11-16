@@ -65,7 +65,7 @@
 
   <!-- popisky -->
   <g font-size="14" font-weight="600" fill="#8a95a1" text-anchor="middle" letter-spacing=".5">
-    <text x="462" y="890">ZÁSOBNÍK TUV</text>
+    <text x="160" y="143">VENKOVNÍ JEDNOTKA</text><text x="462" y="890">ZÁSOBNÍK TUV</text>
     <text x="55" y="710">TČ</text><text x="150" y="710">KOMPRESOR</text><text x="245" y="710">ODTÁVÁNÍ</text>
     <text x="55" y="790">BIVALENCE</text><text x="150" y="790">LÉTO</text><text x="245" y="790">CHLAZENÍ</text>
     <text x="55" y="870">PORUCHA</text><text x="150" y="870">REŽIM</text><text x="245" y="870">REGULACE</text>

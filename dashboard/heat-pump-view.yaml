@@ -255,7 +255,7 @@ sections:
     - condition: screen
       media_query: '(min-width: 768px)'
   - type: picture-elements
-    image: /local/acond/heatpump-mobile.svg?v=5
+    image: /local/acond/heatpump-mobile.svg?v=6
     grid_options:
       columns: full
     visibility:
