@@ -77,5 +77,5 @@
     <text x="470" y="356" text-anchor="middle" font-size="13" fill="#3d8be5">ZPÁTEČKA</text>
     <g font-size="12" letter-spacing=".5"><text x="70" y="578" text-anchor="middle">TČ</text><text x="150" y="578" text-anchor="middle">KOMPRESOR</text><text x="230" y="578" text-anchor="middle">ODTÁVÁNÍ</text><text x="310" y="578" text-anchor="middle">BIVALENCE</text><text x="390" y="578" text-anchor="middle">LÉTO</text><text x="470" y="578" text-anchor="middle">CHLAZENÍ</text><text x="550" y="578" text-anchor="middle">PORUCHA</text><text x="630" y="578" text-anchor="middle">REŽIM</text><text x="710" y="578" text-anchor="middle">REGULACE</text></g>
   </g>
-<g font-size="16" font-weight="600" fill="#8a95a1"><circle cx="50" cy="36" r="7.2" fill="#ff6b5e"/><text x="66" y="41.6">AKTUÁLNÍ</text><circle cx="50" cy="68" r="7.2" fill="#5fd068"/><text x="66" y="73.6">ŽÁDANÁ</text></g>
+<g font-size="14" font-weight="600" fill="#8a95a1"><circle cx="1100" cy="30" r="6.3" fill="#ff6b5e"/><text x="1113" y="35">AKTUÁLNÍ</text><circle cx="1100" cy="56" r="6.3" fill="#5fd068"/><text x="1113" y="61">ŽÁDANÁ</text></g>
 </svg>
