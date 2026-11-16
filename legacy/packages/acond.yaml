@@ -1,6 +1,6 @@
 # =====================================================================
 #  Acond Therm – tepelné čerpadlo přes ModbusTCP
-#  Umístění: /config/packages/acond.yaml
+#  LEGACY: jen pro instalaci bez integrace. Umístění: /config/packages/acond.yaml
 #  V configuration.yaml musí být:
 #    homeassistant:
 #      packages: !include_dir_named packages

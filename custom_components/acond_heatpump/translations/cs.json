@@ -1,0 +1,180 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tepelné čerpadlo Acond",
+        "description": "V webovém rozhraní TČ musí být zapnutý ModbusTCP (zaškrtávátko ModbusTCP). Připojen smí být jen jeden Modbus master.",
+        "data": {
+          "host": "Adresa",
+          "port": "Port",
+          "device_id": "Modbus ID zařízení",
+          "scan_interval": "Interval čtení",
+          "circuit2": "Je zapojen 2. topný okruh",
+          "brine": "Okruh solanky (země/voda)"
+        },
+        "data_description": {
+          "host": "IP adresa tepelného čerpadla",
+          "scan_interval": "Musí být kratší než MaxCommDataRefresh v TČ (výchozí 30 s), jinak se TČ vrátí na vlastní regulaci."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Nelze se připojit k TČ. Zkontrolujte adresu a zapnutí ModbusTCP.",
+      "unknown": "Neočekávaná chyba"
+    },
+    "abort": {
+      "already_configured": "Toto TČ už je nastavené"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Možnosti",
+        "data": {
+          "scan_interval": "Interval čtení",
+          "circuit2": "Je zapojen 2. topný okruh",
+          "brine": "Okruh solanky (země/voda)"
+        },
+        "data_description": {
+          "scan_interval": "Musí být kratší než MaxCommDataRefresh v TČ (výchozí 30 s), jinak se TČ vrátí na vlastní regulaci."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "circuit1_target": {
+        "name": "Okruh 1 žádaná"
+      },
+      "circuit1_actual": {
+        "name": "Okruh 1 aktuální"
+      },
+      "circuit2_target": {
+        "name": "Okruh 2 žádaná"
+      },
+      "circuit2_actual": {
+        "name": "Okruh 2 aktuální"
+      },
+      "dhw_target": {
+        "name": "TUV žádaná"
+      },
+      "dhw_actual": {
+        "name": "TUV aktuální"
+      },
+      "return_target": {
+        "name": "Zpátečka žádaná"
+      },
+      "return_actual": {
+        "name": "Zpátečka aktuální"
+      },
+      "outdoor": {
+        "name": "Venkovní teplota"
+      },
+      "brine": {
+        "name": "Solanka"
+      },
+      "flow": {
+        "name": "Výstupní voda"
+      },
+      "mode": {
+        "name": "Režim",
+        "state": {
+          "auto": "Automat",
+          "heat_pump": "Jen TČ",
+          "backup": "Jen bivalence",
+          "off": "Vypnuto",
+          "manual": "Manuál",
+          "cooling": "Chlazení"
+        }
+      },
+      "regulation": {
+        "name": "Typ regulace",
+        "state": {
+          "acondtherm": "AcondTherm",
+          "equitherm": "Ekviterm",
+          "manual": "Manuál"
+        }
+      },
+      "status": {
+        "name": "Stavový registr"
+      },
+      "tc_set": {
+        "name": "Registr TC_set"
+      },
+      "heartbeat": {
+        "name": "Heartbeat"
+      }
+    },
+    "binary_sensor": {
+      "on": {
+        "name": "TČ zapnuto"
+      },
+      "running": {
+        "name": "Kompresor běží"
+      },
+      "fault": {
+        "name": "Porucha"
+      },
+      "dhw_heating": {
+        "name": "Ohřev TUV"
+      },
+      "circulation1": {
+        "name": "Oběh okruh 1"
+      },
+      "circulation2": {
+        "name": "Oběh okruh 2"
+      },
+      "defrost": {
+        "name": "Odtávání"
+      },
+      "backup_heater": {
+        "name": "Bivalence"
+      },
+      "summer": {
+        "name": "Letní provoz"
+      },
+      "brine_circulation": {
+        "name": "Oběh solanky"
+      },
+      "cooling": {
+        "name": "Chlazení"
+      }
+    },
+    "climate": {
+      "circuit1": {
+        "name": "Okruh 1"
+      },
+      "circuit2": {
+        "name": "Okruh 2"
+      },
+      "dhw": {
+        "name": "TUV"
+      }
+    },
+    "select": {
+      "mode": {
+        "name": "Režim TČ",
+        "state": {
+          "auto": "Automat",
+          "heat_pump": "Jen TČ",
+          "backup": "Jen bivalence",
+          "off": "Vypnuto",
+          "cooling": "Chlazení"
+        }
+      },
+      "regulation": {
+        "name": "Typ regulace",
+        "state": {
+          "acondtherm": "AcondTherm",
+          "equitherm": "Ekviterm",
+          "manual": "Manuál"
+        }
+      }
+    },
+    "number": {
+      "return_manual": {
+        "name": "Zpátečka manuál"
+      }
+    }
+  }
+}

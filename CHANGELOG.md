@@ -5,6 +5,21 @@ Všechny významné změny v tomto projektu jsou dokumentovány zde.
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/),
 projekt používá [sémantické verzování](https://semver.org/lang/cs/).
 
+## [2.0.0] - 2026-11-16
+
+### Změněno
+- Projekt je nově **integrace pro HACS** (`custom_components/acond_heatpump`) místo YAML balíčku:
+  nastavení přes UI (adresa, port, Modbus ID, interval čtení, volitelný 2. okruh a solanka),
+  vlastní Modbus TCP klient bez dalších Python závislostí, čtení všech registrů dvěma dotazy.
+- Stavy selectů jsou klíče nezávislé na jazyce (`auto`, `heat_pump`, … / `acondtherm`, `equitherm`, `manual`),
+  zobrazované názvy jsou přeložené (čeština, angličtina).
+- SVG pro dashboard servíruje integrace na `/acond_heatpump/…`, kopírování do `/config/www` odpadá.
+- YAML balíček přesunut do `legacy/packages/acond.yaml`.
+
+### Přidáno
+- Termostat a senzory 2. okruhu, oběh okruhu 2 a solanky (volitelně), stav topí/nečinný u termostatů.
+- Ikona integrace (`brand/`), HACS metadata, GitHub Actions (HACS, hassfest, testy), testy proti simulovanému TČ.
+
 ## [1.0.0] - 2026-11-16
 
 ### Přidáno

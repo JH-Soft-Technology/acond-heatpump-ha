@@ -1,12 +1,14 @@
 # ♨️ Tepelné čerpadlo Acond pro Home Assistant
 
-Integrace tepelného čerpadla **Acond Therm** do Home Assistantu přes **Modbus TCP**, bez vlastní komponenty, jen jako YAML balíček. K tomu ilustrovaná záložka dashboardu, která ukazuje celý systém (venkovní jednotka, výstupní voda a zpátečka, otopný okruh domu, zásobník TUV) s živými hodnotami a umožňuje ho ovládat.
+Integrace tepelného čerpadla **Acond Therm** do Home Assistantu přes **Modbus TCP**: nativní integrace instalovatelná z HACS (nastavení v UI, bez YAML, bez dalších Python závislostí). K tomu ilustrovaná záložka dashboardu, která ukazuje celý systém (venkovní jednotka, výstupní voda a zpátečka, otopný okruh domu, zásobník TUV) s živými hodnotami a umožňuje ho ovládat.
 
 🌐 **[English README](README.md)**
 
 ![Platform](https://img.shields.io/badge/platform-Home%20Assistant-41BDF5)
 ![Protocol](https://img.shields.io/badge/protocol-Modbus%20TCP-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
+[![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5)](https://hacs.xyz)
+![Validate](https://github.com/JH-Soft-Technology/acond-heatpump-ha/actions/workflows/validate.yml/badge.svg)
 
 ---
 
@@ -22,11 +24,11 @@ Integrace tepelného čerpadla **Acond Therm** do Home Assistantu přes **Modbus
 
 ## ✨ Funkce
 
-- **Modbus TCP** hub se všemi registry, které firmware Acond zpřístupňuje (input `30001–30018`, holding `40001–40012`)
+- čtení všech registrů, které firmware Acond zpřístupňuje (input `30001–30018`, holding `40001–40012`), dvěma dotazy přes **Modbus TCP**, nastavení v UI
 - **Senzory**: okruh 1 a 2 (aktuální / žádaná), TUV (aktuální / žádaná), výstupní voda, zpátečka (aktuální / žádaná), venkovní teplota, solanka, heartbeat komunikace
 - **Stavové bity** z `TC_status` jako binární senzory: TČ zapnuto, kompresor, porucha, ohřev TUV, oběh okruhu 1, odtávání, bivalence, letní provoz, chlazení
 - **Ovládání**:
-  - termostaty (`climate`) pro okruh 1 a TUV, žádaná teplota se zapisuje do holding registrů
+  - termostaty (`climate`) pro okruh 1, okruh 2 (volitelně) a TUV, včetně stavu topí/nečinný, žádaná teplota se zapisuje do holding registrů
   - `select` pro režim TČ (Automat / Jen TČ / Jen bivalence / Vypnuto / Chlazení), zachovává ostatní bity `TC_set`
   - `select` pro typ regulace (AcondTherm / Ekviterm / Manuál)
   - `number` pro žádanou zpátečku v manuálním režimu
@@ -42,12 +44,12 @@ Integrace tepelného čerpadla **Acond Therm** do Home Assistantu přes **Modbus
 ## 📦 Obsah
 
 ```
-packages/acond.yaml               # Modbus hub, senzory, termostaty, template binární senzory / select / number
-www/acond/heatpump.svg            # schéma pro počítač
-www/acond/heatpump-mobile.svg     # schéma pro telefon (na výšku)
-www/acond/fan-spin.svg            # animovaný ventilátor (běží kompresor)
-dashboard/heat-pump-view.yaml     # záložka Lovelace (sections) využívající soubory výše
-docs/                             # náhledové obrázky
+custom_components/acond_heatpump/   # integrace (instaluje ji HACS)
+  www/                              # SVG pro dashboard, dostupné na /acond_heatpump/...
+  brand/                            # ikona integrace
+dashboard/heat-pump-view.yaml       # záložka Lovelace (sections)
+legacy/packages/acond.yaml          # původní varianta jen v YAML (s integrací není potřeba)
+docs/                               # náhledové obrázky
 ```
 
 ---
@@ -55,42 +57,52 @@ docs/                             # náhledové obrázky
 ## 🚀 Instalace
 
 ### 1. Zapni Modbus TCP v TČ
-Modbus TCP musí být zapnutý v regulaci Acond. Ověř, že je port z Home Assistantu dostupný:
+Ve webovém rozhraní TČ otevři stránku **ModbusTCP** a zaškrtni **ModbusTCP**. Dokud se nepřipojí Home Assistant, stav ukazuje `ModbusTCP false` – to je v pořádku.
 
-```bash
-timeout 3 bash -c '</dev/tcp/192.168.1.100/502' && echo open
-```
+> ⚠️ TČ dovoluje **jen jednoho Modbus mastera**. Ujisti se, že ho nečte žádný jiný systém. Při výpadku komunikace delším než *MaxCommDataRefresh* (výchozí 30 s) se TČ vrací na vlastní regulaci.
 
-> ⚠️ TČ dovoluje **jen jednoho Modbus mastera**. Ujisti se, že ho nečte žádný jiný systém. Při výpadku komunikace delším než ~30 s se TČ vrací na vlastní regulaci.
+### 2. Instalace přes HACS
+[![Otevřít repozitář v HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=JH-Soft-Technology&repository=acond-heatpump-ha&category=integration)
 
-### 2. Zapni packages
-V `configuration.yaml` (pokud už blok `homeassistant:` máš, doplň jen `packages:`):
+Nebo ručně: **HACS → ⋮ → Vlastní repozitáře** → `https://github.com/JH-Soft-Technology/acond-heatpump-ha`, typ **Integrace** → stáhni **Acond Heat Pump** → restartuj Home Assistant.
 
-```yaml
-homeassistant:
-  packages: !include_dir_named packages
-```
+<details><summary>Ruční instalace bez HACS</summary>
 
-### 3. Zkopíruj soubory
+Zkopíruj `custom_components/acond_heatpump` do `/config/custom_components/` a restartuj Home Assistant.
+</details>
 
-| Z tohoto repa | Do konfigurace HA |
-|---|---|
-| `packages/acond.yaml` | `/config/packages/acond.yaml` |
-| `www/acond/*.svg` | `/config/www/acond/` |
+### 3. Přidej integraci
+[![Přidat integraci](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=acond_heatpump)
 
-V `packages/acond.yaml` uprav `host:` na IP adresu svého TČ (výchozí Modbus ID `1`, port `502`).
+**Nastavení → Zařízení a služby → Přidat integraci → Acond Heat Pump** a vyplň:
 
-### 4. Kontrola a restart
-**Nastavení → Systém → Opravy → ⋮ → Zkontrolovat konfiguraci** (nebo `ha core check`), pak restartuj Home Assistant.
+| Pole | Výchozí | Poznámka |
+|---|---|---|
+| Adresa | – | IP adresa TČ |
+| Port | `502` | |
+| Modbus ID zařízení | `1` | ID `2` je vyhrazené pro kaskády |
+| Interval čtení | `10 s` | 5–25 s, musí být kratší než *MaxCommDataRefresh* |
+| 2. topný okruh | vyp | přidá termostat a senzory okruhu 2 |
+| Okruh solanky | vyp | jen jednotky země/voda |
 
-### 5. Přidej záložku dashboardu
-Otevři dashboard → **⋮ → Upravit dashboard → ⋮ → Editor surové konfigurace** a vlož obsah `dashboard/heat-pump-view.yaml` jako novou položku pod `views:`.
+Interval a volitelné okruhy jde později změnit přes **Konfigurovat**.
+
+### 4. Přidej záložku dashboardu
+Otevři dashboard → **⋮ → Upravit dashboard → ⋮ → Editor surové konfigurace** a vlož obsah `dashboard/heat-pump-view.yaml` jako novou položku pod `views:`. Obrázky servíruje integrace, do `/config/www` se nic nekopíruje.
+
+### Přechod z YAML balíčku (v1.x)
+1. Smaž `/config/packages/acond.yaml` (případně i `/config/www/acond/`) a restartuj Home Assistant.
+2. V **Nastavení → Entity** smaž osiřelé entity `acond_*` (filtr *Jen pro čtení*), jinak nové dostanou příponu `_2`.
+3. Nainstaluj integraci podle postupu výše. Entity ID zůstávají stejná jako ve v1, dashboardy a automatizace fungují dál.
+4. V dashboardu změň cesty obrázků z `/local/acond/` na `/acond_heatpump/`.
+
+Stavy selectů jsou teď klíče nezávislé na jazyce: režim `auto` / `heat_pump` / `backup` / `off` / `cooling`, regulace `acondtherm` / `equitherm` / `manual`. Automatizace porovnávající staré české popisky je potřeba upravit.
 
 ---
 
 ## 🔢 Mapa registrů
 
-Adresy v Home Assistantu jsou **od nuly** (`30001` → input `0`, `40001` → holding `0`). Teploty jsou `int16 × 10`, big endian.
+Adresy v Modbus rámci jsou **od nuly** (`30001` → input `0`, `40001` → holding `0`). Teploty jsou `int16 × 10`, big endian.
 
 | Registr | Adresa v HA | Význam | Entita |
 |---|---|---|---|
@@ -111,7 +123,7 @@ Adresy v Home Assistantu jsou **od nuly** (`30001` → input `0`, `40001` → ho
 | 30018 | input 17 | Výstupní voda | `sensor.acond_vystupni_voda` |
 | 40001 | holding 0 | Okruh 1 žádaná (zápis) | `climate.acond_okruh_1` |
 | 40005 | holding 4 | TUV žádaná (zápis) | `climate.acond_tuv` |
-| 40006 | holding 5 | `TC_set` bity režimu (zápis) | `select.acond_rezim_tc`, `sensor.acond_tc_set_raw` |
+| 40006 | holding 5 | `TC_set` bity režimu (zápis) | `select.acond_rezim_tc`, `sensor.acond_tc_set_raw` (ve výchozím stavu vypnutý) |
 | 40007 | holding 6 | Typ regulace (zápis) | `select.acond_typ_regulace` |
 | 40008 | holding 7 | Žádaná zpátečka – manuál (zápis) | `number.acond_zpatecka_manual` |
 
@@ -121,10 +133,10 @@ Bity `TC_status`: `0` zapnuto · `1` kompresor · `2` porucha · `3` TUV · `4` 
 
 ## ⚠️ Poznámky
 
-- Entity ID vznikají z českých názvů v balíčku (např. `sensor.acond_tuv_aktualni`). Odkazují na ně šablony i dashboard, takže při přejmenování uprav obojí.
+- Entity ID jsou pevná (např. `sensor.acond_tuv_aktualni`), aby dashboard fungoval v libovolném jazyce. Zobrazované názvy se řídí jazykem HA (čeština/angličtina). Při přejmenování entit uprav dashboard.
 - Zápisy (`climate`, `select`, `number`) jdou přímo do TČ. Začni malými změnami.
-- Po změně SVG zvyš v dashboardu `?v=`, jinak prohlížeč použije starou verzi z cache (`/local/` se cachuje 31 dní).
-- Okruh 2 a solanka ukazují `0` na instalacích, které je nemají. Pokud je nepotřebuješ, odeber je z balíčku.
+- Po změně SVG zvyš v dashboardu `?v=`, jinak prohlížeč použije starou verzi z cache (obrázky se cachují).
+- Entity okruhu 2 a solanky vzniknou jen po zapnutí v možnostech integrace.
 
 ---
 

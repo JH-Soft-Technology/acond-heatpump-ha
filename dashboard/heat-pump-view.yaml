@@ -1,7 +1,7 @@
 # Lovelace view: Acond heat pump
 # Paste into: Dashboard → ⋮ → Edit dashboard → ⋮ → Raw configuration editor → under `views:`
 # (or add a new view and paste into its YAML editor)
-# Images are expected in /config/www/acond/ (served as /local/acond/...)
+# Images are served by the integration at /acond_heatpump/... (no copying needed)
 type: sections
 max_columns: 4
 title: Tepelné čerpadlo
@@ -21,7 +21,7 @@ sections:
       show_name: true
       icon: mdi:heart-pulse
   - type: picture-elements
-    image: /local/acond/heatpump.svg?v=8
+    image: /acond_heatpump/heatpump.svg?v=8
     grid_options:
       columns: full
     elements:
@@ -154,7 +154,7 @@ sections:
         state: 'on'
       elements:
       - type: image
-        image: /local/acond/fan-spin.svg?v=1
+        image: /acond_heatpump/fan-spin.svg?v=1
         tap_action:
           action: more-info
           entity: binary_sensor.acond_kompresor_bezi
@@ -255,7 +255,7 @@ sections:
     - condition: screen
       media_query: '(min-width: 768px)'
   - type: picture-elements
-    image: /local/acond/heatpump-mobile.svg?v=6
+    image: /acond_heatpump/heatpump-mobile.svg?v=6
     grid_options:
       columns: full
     visibility:
@@ -391,7 +391,7 @@ sections:
         state: 'on'
       elements:
       - type: image
-        image: /local/acond/fan-spin.svg?v=1
+        image: /acond_heatpump/fan-spin.svg?v=1
         tap_action:
           action: more-info
           entity: binary_sensor.acond_kompresor_bezi

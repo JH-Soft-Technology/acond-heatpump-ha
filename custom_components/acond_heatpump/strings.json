@@ -1,0 +1,180 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Acond heat pump",
+        "description": "Modbus TCP must be enabled in the heat pump web interface (ModbusTCP checkbox). Only one Modbus master may be connected.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "device_id": "Modbus device ID",
+          "scan_interval": "Polling interval",
+          "circuit2": "Heating circuit 2 installed",
+          "brine": "Brine circuit (ground/water unit)"
+        },
+        "data_description": {
+          "host": "IP address of the heat pump",
+          "scan_interval": "Must stay below the heat pump's MaxCommDataRefresh (30 s by default), otherwise it falls back to its own regulation."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to the heat pump. Check the address and that ModbusTCP is enabled.",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This heat pump is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options",
+        "data": {
+          "scan_interval": "Polling interval",
+          "circuit2": "Heating circuit 2 installed",
+          "brine": "Brine circuit (ground/water unit)"
+        },
+        "data_description": {
+          "scan_interval": "Must stay below the heat pump's MaxCommDataRefresh (30 s by default), otherwise it falls back to its own regulation."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "circuit1_target": {
+        "name": "Circuit 1 target"
+      },
+      "circuit1_actual": {
+        "name": "Circuit 1 actual"
+      },
+      "circuit2_target": {
+        "name": "Circuit 2 target"
+      },
+      "circuit2_actual": {
+        "name": "Circuit 2 actual"
+      },
+      "dhw_target": {
+        "name": "DHW target"
+      },
+      "dhw_actual": {
+        "name": "DHW actual"
+      },
+      "return_target": {
+        "name": "Return water target"
+      },
+      "return_actual": {
+        "name": "Return water actual"
+      },
+      "outdoor": {
+        "name": "Outdoor temperature"
+      },
+      "brine": {
+        "name": "Brine"
+      },
+      "flow": {
+        "name": "Flow water"
+      },
+      "mode": {
+        "name": "Mode",
+        "state": {
+          "auto": "Automatic",
+          "heat_pump": "Heat pump only",
+          "backup": "Backup heater only",
+          "off": "Off",
+          "manual": "Manual",
+          "cooling": "Cooling"
+        }
+      },
+      "regulation": {
+        "name": "Regulation type",
+        "state": {
+          "acondtherm": "AcondTherm",
+          "equitherm": "Equithermal",
+          "manual": "Manual"
+        }
+      },
+      "status": {
+        "name": "Status register"
+      },
+      "tc_set": {
+        "name": "TC_set register"
+      },
+      "heartbeat": {
+        "name": "Heartbeat"
+      }
+    },
+    "binary_sensor": {
+      "on": {
+        "name": "Heat pump on"
+      },
+      "running": {
+        "name": "Compressor running"
+      },
+      "fault": {
+        "name": "Fault"
+      },
+      "dhw_heating": {
+        "name": "DHW heating"
+      },
+      "circulation1": {
+        "name": "Circuit 1 circulation"
+      },
+      "circulation2": {
+        "name": "Circuit 2 circulation"
+      },
+      "defrost": {
+        "name": "Defrosting"
+      },
+      "backup_heater": {
+        "name": "Backup heater"
+      },
+      "summer": {
+        "name": "Summer mode"
+      },
+      "brine_circulation": {
+        "name": "Brine circulation"
+      },
+      "cooling": {
+        "name": "Cooling"
+      }
+    },
+    "climate": {
+      "circuit1": {
+        "name": "Circuit 1"
+      },
+      "circuit2": {
+        "name": "Circuit 2"
+      },
+      "dhw": {
+        "name": "DHW"
+      }
+    },
+    "select": {
+      "mode": {
+        "name": "Heat pump mode",
+        "state": {
+          "auto": "Automatic",
+          "heat_pump": "Heat pump only",
+          "backup": "Backup heater only",
+          "off": "Off",
+          "cooling": "Cooling"
+        }
+      },
+      "regulation": {
+        "name": "Regulation type",
+        "state": {
+          "acondtherm": "AcondTherm",
+          "equitherm": "Equithermal",
+          "manual": "Manual"
+        }
+      }
+    },
+    "number": {
+      "return_manual": {
+        "name": "Return water target (manual)"
+      }
+    }
+  }
+}

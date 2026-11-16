@@ -1,12 +1,14 @@
 # ♨️ Acond Heat Pump for Home Assistant
 
-Home Assistant integration for **Acond Therm** heat pumps over **Modbus TCP** — no custom component, just a YAML package — plus an illustrated Lovelace dashboard that shows the whole system (outdoor unit, flow/return pipes, house heating circuit, DHW tank) with live values and lets you control it.
+Home Assistant integration for **Acond Therm** heat pumps over **Modbus TCP** — a native integration installable from HACS (config flow, no YAML, no extra Python dependencies) — plus an illustrated Lovelace dashboard that shows the whole system (outdoor unit, flow/return pipes, house heating circuit, DHW tank) with live values and lets you control it.
 
 🌐 **[Česká verze README](README.cs.md)**
 
 ![Platform](https://img.shields.io/badge/platform-Home%20Assistant-41BDF5)
 ![Protocol](https://img.shields.io/badge/protocol-Modbus%20TCP-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
+[![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5)](https://hacs.xyz)
+![Validate](https://github.com/JH-Soft-Technology/acond-heatpump-ha/actions/workflows/validate.yml/badge.svg)
 
 ---
 
@@ -22,11 +24,11 @@ Home Assistant integration for **Acond Therm** heat pumps over **Modbus TCP** �
 
 ## ✨ Features
 
-- **Modbus TCP** hub with all registers the Acond firmware exposes (input `30001–30018`, holding `40001–40012`)
+- **Modbus TCP** polling of all registers the Acond firmware exposes (input `30001–30018`, holding `40001–40012`) in two requests, set up from the UI
 - **Sensors**: circuit 1 & 2 (actual / target), DHW (actual / target), flow water, return water (actual / target), outdoor air, brine, communication heartbeat
 - **Status bits** from `TC_status` decoded into binary sensors: running, compressor, fault, DHW heating, circulation, defrost, backup heater (bivalence), summer mode, cooling
 - **Control**:
-  - `climate` thermostats for circuit 1 and DHW (target temperature written to holding registers)
+  - `climate` thermostats for circuit 1, circuit 2 (optional) and DHW, with heating/idle action (target temperature written to holding registers)
   - `select` for heat pump mode (Auto / Heat pump only / Backup only / Off / Cooling) — preserves the other bits of `TC_set`
   - `select` for regulation type (AcondTherm / Equithermal / Manual)
   - `number` for manual return-water target
@@ -42,12 +44,12 @@ Home Assistant integration for **Acond Therm** heat pumps over **Modbus TCP** �
 ## 📦 Contents
 
 ```
-packages/acond.yaml               # Modbus hub, sensors, climates, template binary sensors / selects / number
-www/acond/heatpump.svg            # desktop schematic
-www/acond/heatpump-mobile.svg     # phone schematic (portrait)
-www/acond/fan-spin.svg            # animated fan overlay (compressor running)
-dashboard/heat-pump-view.yaml     # Lovelace view (sections) using the files above
-docs/                             # preview images
+custom_components/acond_heatpump/   # the integration (installed by HACS)
+  www/                              # dashboard SVGs, served at /acond_heatpump/...
+  brand/                            # integration icon
+dashboard/heat-pump-view.yaml       # Lovelace view (sections)
+legacy/packages/acond.yaml          # old YAML-only variant (not needed with the integration)
+docs/                               # preview images
 ```
 
 ---
@@ -55,42 +57,52 @@ docs/                             # preview images
 ## 🚀 Installation
 
 ### 1. Enable Modbus TCP on the heat pump
-Modbus TCP must be enabled in the Acond regulation. Check that the port is reachable from Home Assistant:
+Open the heat pump web interface → **ModbusTCP** page and tick the **ModbusTCP** checkbox. The status shows `ModbusTCP false` until Home Assistant connects – that is expected.
 
-```bash
-timeout 3 bash -c '</dev/tcp/192.168.1.100/502' && echo open
-```
+> ⚠️ The heat pump accepts **only one Modbus master**. Make sure no other system polls it. If communication stops for longer than *MaxCommDataRefresh* (30 s by default), the heat pump falls back to its own regulation.
 
-> ⚠️ The heat pump accepts **only one Modbus master**. Make sure no other system polls it. If communication stops for more than ~30 s, the heat pump falls back to its own regulation.
+### 2. Install via HACS
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=JH-Soft-Technology&repository=acond-heatpump-ha&category=integration)
 
-### 2. Enable packages
-In `configuration.yaml` (merge into an existing `homeassistant:` block if you have one):
+Or manually: **HACS → ⋮ → Custom repositories** → `https://github.com/JH-Soft-Technology/acond-heatpump-ha`, type **Integration** → download **Acond Heat Pump** → restart Home Assistant.
 
-```yaml
-homeassistant:
-  packages: !include_dir_named packages
-```
+<details><summary>Manual installation without HACS</summary>
 
-### 3. Copy the files
+Copy `custom_components/acond_heatpump` to `/config/custom_components/` and restart Home Assistant.
+</details>
 
-| From this repo | To your HA config |
-|---|---|
-| `packages/acond.yaml` | `/config/packages/acond.yaml` |
-| `www/acond/*.svg` | `/config/www/acond/` |
+### 3. Add the integration
+[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=acond_heatpump)
 
-Edit `host:` in `packages/acond.yaml` to the IP address of your heat pump (default Modbus ID `1`, port `502`).
+**Settings → Devices & services → Add integration → Acond Heat Pump** and fill in:
 
-### 4. Check and restart
-**Settings → System → Repairs → ⋮ → Check configuration** (or `ha core check`), then restart Home Assistant.
+| Field | Default | Note |
+|---|---|---|
+| Host | – | IP address of the heat pump |
+| Port | `502` | |
+| Modbus device ID | `1` | ID `2` is reserved for cascades |
+| Polling interval | `10 s` | 5–25 s, must stay below *MaxCommDataRefresh* |
+| Heating circuit 2 | off | adds circuit 2 thermostat and sensors |
+| Brine circuit | off | ground/water units only |
 
-### 5. Add the dashboard view
-Open your dashboard → **⋮ → Edit dashboard → ⋮ → Raw configuration editor** and paste the contents of `dashboard/heat-pump-view.yaml` as a new item under `views:`.
+Polling interval and optional circuits can be changed later under **Configure**.
+
+### 4. Add the dashboard view
+Open your dashboard → **⋮ → Edit dashboard → ⋮ → Raw configuration editor** and paste the contents of `dashboard/heat-pump-view.yaml` as a new item under `views:`. The images are served by the integration, nothing has to be copied to `/config/www`.
+
+### Migrating from the YAML package (v1.x)
+1. Remove `/config/packages/acond.yaml` (and `/config/www/acond/` if you like) and restart Home Assistant.
+2. Delete the orphaned `acond_*` entities under **Settings → Entities** (filter *Read-only*), otherwise the new ones get a `_2` suffix.
+3. Install the integration as above. Entity IDs are the same as in v1, so dashboards and automations keep working.
+4. In the dashboard, change image paths from `/local/acond/` to `/acond_heatpump/`.
+
+Select states are now language-independent keys: mode `auto` / `heat_pump` / `backup` / `off` / `cooling`, regulation `acondtherm` / `equitherm` / `manual`. Update automations that compared against the old Czech labels.
 
 ---
 
 ## 🔢 Register map
 
-Addresses in Home Assistant are **0-based** (`30001` → input `0`, `40001` → holding `0`). Temperatures are `int16 × 10`, big endian.
+Addresses are **0-based** on the wire (`30001` → input `0`, `40001` → holding `0`). Temperatures are `int16 × 10`, big endian.
 
 | Register | HA address | Meaning | Entity |
 |---|---|---|---|
@@ -111,7 +123,7 @@ Addresses in Home Assistant are **0-based** (`30001` → input `0`, `40001` → 
 | 30018 | input 17 | Flow (outlet) water | `sensor.acond_vystupni_voda` |
 | 40001 | holding 0 | Circuit 1 target (write) | `climate.acond_okruh_1` |
 | 40005 | holding 4 | DHW target (write) | `climate.acond_tuv` |
-| 40006 | holding 5 | `TC_set` mode bits (write) | `select.acond_rezim_tc`, `sensor.acond_tc_set_raw` |
+| 40006 | holding 5 | `TC_set` mode bits (write) | `select.acond_rezim_tc`, `sensor.acond_tc_set_raw` (disabled by default) |
 | 40007 | holding 6 | Regulation type (write) | `select.acond_typ_regulace` |
 | 40008 | holding 7 | Manual return target (write) | `number.acond_zpatecka_manual` |
 
@@ -121,10 +133,10 @@ Addresses in Home Assistant are **0-based** (`30001` → input `0`, `40001` → 
 
 ## ⚠️ Notes
 
-- Entity IDs are generated from the Czech names in the package (e.g. `sensor.acond_tuv_aktualni`). Templates and the dashboard refer to them — if you rename the entities, update both.
+- Entity IDs are fixed to the Czech-based IDs (e.g. `sensor.acond_tuv_aktualni`) so the dashboard works in any language; friendly names follow the HA language (English/Czech). If you rename entities, update the dashboard.
 - Writes (`climate`, `select`, `number`) go straight to the heat pump. Test with small changes first.
-- After changing an SVG, bump the `?v=` query in the dashboard so browsers don't serve the cached copy (`/local/` is cached for 31 days).
-- Circuit 2 and brine read `0` on installations without them — remove those sensors from the package if you don't need them.
+- After changing an SVG, bump the `?v=` query in the dashboard so browsers don't serve the cached copy (images are cached).
+- Circuit 2 and brine entities are only created when enabled in the integration options.
 
 ---
 
