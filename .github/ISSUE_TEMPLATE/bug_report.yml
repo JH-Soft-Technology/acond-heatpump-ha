@@ -1,0 +1,36 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What did you expect and what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: integration_version
+    attributes:
+      label: Integration version
+      placeholder: "2.0.0"
+    validations:
+      required: true
+  - type: input
+    id: ha_version
+    attributes:
+      label: Home Assistant version
+      placeholder: "2026.11.1"
+    validations:
+      required: true
+  - type: input
+    id: heat_pump
+    attributes:
+      label: Heat pump model and firmware
+      placeholder: "Acond PRO-N, firmware 32.1"
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant log lines with debug logging enabled for `custom_components.acond_heatpump`.
+      render: text
